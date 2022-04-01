@@ -4,6 +4,8 @@ import {
   Grid,
   Slider,
   Stack,
+  Tab,
+  Tabs,
   TextField,
 } from '@mui/material'
 import {
@@ -12,14 +14,31 @@ import {
 } from '@mui/icons-material'
 import Player from './components/Player'
 
-import sounds from './list.json'
+import fingariel from './fingariel.json'
+import miau from './miau.json'
 
 function App() {
   const [volume, setVolume] = useState<number>(100)
+  const [tab, setTab] = useState<number>(0)
 
   const handleChange = (event: Event, newValue: number | number[]) => {
     setVolume(newValue as number)
   }
+
+  const handleTabChange = (event: React.SyntheticEvent, newValue: number) => {
+    setTab(newValue)
+  }
+
+  const boardSounds = [
+    {
+      name: "Fingariel",
+      sounds: fingariel,
+    },
+    {
+      name: "Rant",
+      sounds: miau,
+    },
+  ]
 
   return (
     <Grid container>
@@ -38,33 +57,26 @@ function App() {
           </Stack>
         </Card>
       </Grid>
-      {/*
-      <Grid item xs={6}>
-        <Player
-          volume={volume / 100}
-          src='/music/ave_maria.ogg'
-          name='ave maria'
-        />
+      <Grid item xs={12}>
+        <Tabs value={tab} onChange={handleTabChange}>
+          {boardSounds.map(({ name }) => (
+            <Tab label={name} key={name} />
+          ))}
+        </Tabs>
       </Grid>
-      <Grid item xs={6}>
-        <Player
-          volume={volume / 100}
-          src='/music/dong.mp3'
-          name='dong'
-        />
-      </Grid>
-      */}
-      {sounds.map((sound) => (
-        <Grid item xs={4} key={sound.file}>
-          <Player
-            volume={volume / 100}
-            src={sound.file}
-            name={sound.description}
-          />
-        </Grid>
-      ))}
+      {boardSounds.map(({ name, sounds }, idx) => {
+        return sounds.map((sound) => (
+          <Grid item xs={4} key={sound.file} hidden={tab !== idx}>
+            <Player
+              volume={volume / 100}
+              src={sound.file}
+              name={sound.description}
+            />
+          </Grid>
+        ))
+      })}
     </Grid>
-  );
+  )
 }
 
 export default App;
