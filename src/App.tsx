@@ -1,25 +1,69 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import { useState } from 'react';
+import {
+  Card,
+  Grid,
+  Slider,
+  Stack,
+  TextField,
+} from '@mui/material'
+import {
+  VolumeUp,
+  VolumeDown,
+} from '@mui/icons-material'
+import Player from './components/Player'
+
+import sounds from './list.json'
 
 function App() {
+  const [volume, setVolume] = useState<number>(100)
+
+  const handleChange = (event: Event, newValue: number | number[]) => {
+    setVolume(newValue as number)
+  }
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Grid container>
+      <Grid item xs={12} sx={{}}>
+        <Card sx={{ margin: "1em", padding: '1em' }}>
+          <Stack spacing={2} direction="row" sx={{ mb: 1 }} alignItems="center">
+            <VolumeDown />
+            <Slider value={volume} onChange={handleChange} />
+            <VolumeUp />
+            <TextField
+              value={volume}
+              onChange={(ev) => setVolume(parseInt(ev.target.value))}
+              type='number'
+              label='Volume'
+            />
+          </Stack>
+        </Card>
+      </Grid>
+      {/*
+      <Grid item xs={6}>
+        <Player
+          volume={volume / 100}
+          src='/music/ave_maria.ogg'
+          name='ave maria'
+        />
+      </Grid>
+      <Grid item xs={6}>
+        <Player
+          volume={volume / 100}
+          src='/music/dong.mp3'
+          name='dong'
+        />
+      </Grid>
+      */}
+      {sounds.map((sound) => (
+        <Grid item xs={4} key={sound.file}>
+          <Player
+            volume={volume / 100}
+            src={sound.file}
+            name={sound.description}
+          />
+        </Grid>
+      ))}
+    </Grid>
   );
 }
 
