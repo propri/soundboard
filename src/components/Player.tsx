@@ -31,7 +31,7 @@ export default function Player({
     if (useGlobalVolume) {
       setLocalVolume(volume)
     }
-  }, [useGlobalVolume])
+  }, [useGlobalVolume, volume])
 
   useEffect(() => {
     if (audioEl?.current?.volume) {
